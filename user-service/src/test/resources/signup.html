@@ -1,0 +1,15 @@
+﻿<!doctype html><html><body>
+<form id="f"><input id="name"><input id="email"><input id="role">
+<button id="submit" onclick="event.preventDefault()">Send</button></form>
+<p id="msg"></p>
+<script>
+async function send(){
+ const u={name:document.getElementById("name").value,
+  email:document.getElementById("email").value,
+  role:document.getElementById("role").value};
+ const r=await fetch("http://localhost:8081/api/users",{method:"POST",
+  headers:{"Content-Type":"application/json"},body:JSON.stringify(u)});
+ document.getElementById("msg").innerText="Created "+(await r.json()).name;
+}
+document.getElementById("submit").onclick=send;
+</script></body></html>
