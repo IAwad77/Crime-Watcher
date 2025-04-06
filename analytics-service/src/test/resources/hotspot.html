@@ -1,0 +1,17 @@
+﻿<!doctype html>
+<html>
+<head>
+  <title>Hotspot Dashboard</title>
+</head>
+<body>
+  <button id="btn">Load Hotspots</button>
+  <pre id="out"></pre>
+
+  <script>
+    document.getElementById("btn").onclick = async () => {
+      const res = await fetch("http://localhost:8083/api/analytics/hotspots");
+      document.getElementById("out").innerText = await res.text();
+    };
+  </script>
+</body>
+</html>

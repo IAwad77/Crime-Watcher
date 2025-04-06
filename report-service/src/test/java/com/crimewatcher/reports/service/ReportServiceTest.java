@@ -1,6 +1,7 @@
 ﻿package com.crimewatcher.reports.service;
 import com.crimewatcher.reports.model.*;import com.crimewatcher.reports.repository.ReportRepository;
 import org.junit.jupiter.api.Test;import static org.mockito.Mockito.*;import static org.junit.jupiter.api.Assertions.*;
+
 class ReportServiceTest{
  private final ReportRepository r=mock(ReportRepository.class);
  private final ReportService s=new ReportService(r);
