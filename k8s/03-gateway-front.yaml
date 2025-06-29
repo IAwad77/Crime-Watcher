@@ -1,0 +1,71 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway
+  namespace: crime
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: gateway } }
+  template:
+    metadata: { labels: { app: gateway } }
+    spec:
+      containers:
+        - name: gw
+          image: crimewatcher/gateway-service:0.1
+          env:
+            - { name: USER_SERVICE_URL,      value: http://user-service:8081 }
+            - { name: REPORT_SERVICE_URL,    value: http://report-service:8082 }
+            - { name: ANALYTICS_SERVICE_URL, value: http://analytics-service:8083 }
+          ports: [ { containerPort: 8080 } ]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway
+  namespace: crime
+spec:
+  selector: { app: gateway }
+  ports: [ { port: 8080, targetPort: 8080 } ]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: crime
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: front } }
+  template:
+    metadata: { labels: { app: front } }
+    spec:
+      containers:
+        - name: ui
+          image: crimewatcher/frontend:0.1
+          ports: [ { containerPort: 80 } ]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: crime
+spec:
+  selector: { app: front }
+  ports: [ { port: 80, targetPort: 80 } ]
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: crime-ingress
+  namespace: crime
+spec:
+  rules:
+    - host: crime.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80
