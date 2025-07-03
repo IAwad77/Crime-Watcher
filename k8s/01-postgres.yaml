@@ -1,0 +1,44 @@
+﻿apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pg-pvc
+  namespace: crime
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: crime
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: postgres } }
+  template:
+    metadata: { labels: { app: postgres } }
+    spec:
+      containers:
+        - name: db
+          image: postgres:14
+          env:
+            - { name: POSTGRES_DB,       value: crimewatch_users }
+            - { name: POSTGRES_USER,     value: postgres         }
+            - { name: POSTGRES_PASSWORD, value: password         }
+          ports: [ { containerPort: 5432 } ]
+          volumeMounts:
+            - { name: pg-data, mountPath: /var/lib/postgresql/data }
+      volumes:
+        - name: pg-data
+          persistentVolumeClaim: { claimName: pg-pvc }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: crime
+spec:
+  selector: { app: postgres }
+  ports: [ { port: 5432, targetPort: 5432 } ]
