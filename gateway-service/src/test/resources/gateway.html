@@ -1,0 +1,14 @@
+﻿<!doctype html>
+<html>
+<head><title>Gateway Check</title></head>
+<body>
+<button id="b">Load Users</button>
+<pre id="out"></pre>
+<script>
+document.getElementById("b").onclick = async () => {
+  const res = await fetch("http://localhost:8080/api/users");
+  document.getElementById("out").innerText = await res.text();
+};
+</script>
+</body>
+</html>
