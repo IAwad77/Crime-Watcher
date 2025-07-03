@@ -1,0 +1,11 @@
+﻿server:
+  port: 8082
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/crimewatch_users
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

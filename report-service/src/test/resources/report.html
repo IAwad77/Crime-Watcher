@@ -1,0 +1,11 @@
+﻿<!doctype html><html><body>
+<form id="f"><input id="type"><input id="loc"><textarea id="desc"></textarea>
+<button id="b" onclick="event.preventDefault()">Send</button></form>
+<script>
+async function send(){
+ const r={type:document.getElementById("type").value,location:document.getElementById("loc").value,
+  description:document.getElementById("desc").value};
+ await fetch("http://localhost:8082/api/reports",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(r)});
+}
+document.getElementById("b").onclick=send;
+</script></body></html>
